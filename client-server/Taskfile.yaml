@@ -1,0 +1,38 @@
+version: "3"
+
+tasks:
+
+  dockerpush:
+    desc: "Push Dockerfile"
+    cmds:
+      - task: dockerbuild
+      - cmd: "docker login docker.io"
+
+      - cmd: "docker tag cs:1.0 webvalera96/cs:1.0"
+      - cmd: "docker push webvalera96/cs:1.0"
+
+  dockerclean:
+    desc: "Remove previous docker images"
+    ignore_error: true
+    cmds:
+      - cmd: "docker rmi cs:1.0"
+      - cmd: "docker rmi webvalera96/cs:1.0 --force"
+
+  dockerbuild:
+    desc: "Build Dockerfile"
+    cmds:
+      - task: dockerclean
+      - cmd: "docker build -t cs:1.0 ."
+
+  build:
+    env:
+      CGO_ENABLED: 0
+    desc: "Build "
+    cmds:
+      - cmd: "go build -o out/cs.exe main.go"
+
+  help:
+    desc: "Show help "
+    cmds:
+      - task: build
+      - cmd: "out/cs.exe -h"

@@ -1,0 +1,11 @@
+version: "3"
+tasks:
+  inject:
+    desc: "Inject istio"
+    cmds:
+      - cmd: "kubectl label namespace istio-test istio-injection=enabled --overwrite"
+
+  upgrade:
+    desc: "Upgrade current helm chart"
+    cmds:
+      - cmd: "helm upgrade --install --create-namespace --namespace istio-test test ."
